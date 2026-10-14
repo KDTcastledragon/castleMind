@@ -1,0 +1,91 @@
+/* castleChat Header.css에서 닉네임 + 메뉴 부분만 가져왔다. */
+.HeaderContainer {
+    width: 1280px;
+    max-width: 100%;
+    height: 85px;
+    margin: 8px auto;
+    border-radius: 16px;
+    background: #24513a;
+    overflow: hidden;
+}
+
+.loginedHeader {
+    height: 100%;
+    padding: 0 16px;
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+}
+
+.loginedUserProfileBox {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+}
+
+.loginedUserNickname {
+    max-width: 300px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.headerButtonSection {
+    flex: 1;
+    height: 100%;
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+.headerButtonSection>button {
+    width: 160px;
+    height: 100%;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #b9d3c4;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: color 150ms ease;
+}
+
+.headerButtonSection>button:hover,
+.headerButtonSection>button.active {
+    color: #ffffff;
+}
+
+.headerButtonSection>button.active {
+    box-shadow: inset 0 -3px 0 #7fcaa4;
+}
+
+/* 헤더 오른쪽 끝. 메뉴 영역(flex: 1)이 남은 폭을 다 차지해서 자연스럽게 맨 오른쪽에 붙는다. */
+.loginedUserLogoutButton {
+    width: 90px;
+    height: 36px;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.loginedUserLogoutButton>button {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #475569;
+    border-radius: 10px;
+    background: #27402f;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.loginedUserLogoutButton>button:hover {
+    border-color: #64748b;
+    background: #334155;
+    color: #ffffff;
+}
