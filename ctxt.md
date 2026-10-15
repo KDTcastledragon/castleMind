@@ -35,9 +35,7 @@
 ## ♬♬ 끝 [1] ♬♬
 
 ## [2-1.] CLAUDE 지시사항 [26.10.15 - 01:12]=============================================
-docker ps -a --filter name=mind-castle 이거는 cmd에서 하나? vscode 터미널에서는 불가능??
-
-일단 redis 설치완료.
+1. docker ps -a --filter name=mind-castle 이거는 cmd에서 하나? vscode 터미널에서는 불가능??
 
 ## [2-2.] CLAUDE 결과 [26.10.15 - 01:12]=================================================
 (첫 줄은 개념 질문이라 답변만 하고 기록하지 않는다. "redis 설치완료"에 이어서 진행한 세션 저장소 변경만 기록한다.)
@@ -63,16 +61,9 @@ docker ps -a --filter name=mind-castle 이거는 cmd에서 하나? vscode 터미
 ## ♬♬ 끝 [2] ♬♬
 
 ## [3-1.] CLAUDE 지시사항 [26.10.15 - 01:25]=============================================
-1.root로 할거임. .env 직접 만드는 방법 알려줘.
-2.mariadb 연결하자.
-3.users Table은 내가 직접 만들음.
-
-create table users (
-login_id varchar(20) not null unique,
-user_nickname varchar(30) not null default "유저"
-);
-
-login Id로만 로그인 할거야. 닉네임은 우선...디폴트로 냅둬.
+1. root로 할거임. .env 직접 만드는 방법 알려줘.
+2. mariadb 연결하자.
+3. users Table은 내가 직접 만듦. login Id로만 로그인 할거야. 닉네임은 우선...디폴트로 냅둬.
 
 4. ws연결도 해야지. 로그인 완료시에 붙일거지? castlechat과 유사한 구조로 진행할거야??? (방마다 ws이 아닌, 유저 1명당 ws 1개) 아니면 다른 방식으로?
 
@@ -149,3 +140,18 @@ login Id로만 로그인 할거야. 닉네임은 우선...디폴트로 냅둬.
 - tradeoff : 서버가 1대일 때만 맞는 구조다. 접속자 명부가 프로세스 메모리에 있어서 서버를 2대 이상 띄우면 서로의 접속자를 모른다. (castleChat 도 같은 한계였다. 필요해지면 Redis pub/sub 로 서버끼리 알린다.)
 - 검증 : 서버 3개 파일 node --check 통과, 프론트 npm run lint 통과, vite.config.js 문법 통과. Redis(mind-castle)가 꺼져 있어서 실제 WS 연결 확인은 Docker 를 켠 뒤 진행한다.
 ## ♬♬ 끝 [4] ♬♬
+
+## [5-1.] CLAUDE 지시사항 [26.10.15 - 21:36]=============================================
+ㅇㅋ 그러면 express_server에 jsconfig.json 만들자. ㄱㄱ. 만들어.
+
+## [5-2.] CLAUDE 결과 [26.10.15 - 21:36]=================================================
+1. express_server/jsconfig.json 생성 (JS 타입 검사 끄기)
+- 원인 : VS Code 사용자 설정에 "js/ts.implicitProjectConfig.checkJs": true 가 켜져 있다. 이 설정은 jsconfig.json / tsconfig.json 이 없는 폴더의 JS 파일을 TypeScript 기준으로 타입 검사한다. castle_mind_front 는 jsconfig.json 이 있어서 영향이 없었고, 설정 파일이 없던 express_server 에서만 userMapper.js(rows[0], result.affectedRows), wsDispatcher.js(req.url 등) 에 빨간 줄(ts(7053), ts(2339))이 떴다. 실행에는 문제가 없었다(서버 실행으로 로그인 · DB · 세션 동작 확인됨).
+- 해결방법 : express_server 바로 아래(package.json 옆)에 jsconfig.json 을 만들고 "checkJs": false, node_modules 제외.
+- 의도
+  - VS Code 는 JS 파일 위치에서 위로 올라가며 가장 가까운 jsconfig.json 을 쓴다. 폴더에 하나만 두면 src/db · src/user · src/ws 와 앞으로 만들 파일까지 전부 적용된다.
+  - 프론트 · 서버는 각자 package.json 이 있는 별개 프로젝트라 설정 파일도 각자 둔다. (Spring 멀티모듈에서 모듈마다 build.gradle 을 두는 것과 같다) 사용자 전체 설정은 건드리지 않는다.
+  - 타입 오류 자체는 서버를 TS 로 옮길 때 dbPool.query<RowDataPacket[]> 같은 타입 지정으로 정식으로 해결한다.
+- tradeoff : JS 단계에서는 타입 실수를 편집기가 미리 잡아 주지 않는다. 대신 ESLint 와 실행 확인으로 잡고, TS 전환 때 타입 검사를 다시 받는다.
+- 검증 : 파일 생성만 했다. VS Code 에서 express_server 파일의 빨간 줄이 사라지는지는 사용자가 확인한다(안 사라지면 명령 팔레트의 "TypeScript: Restart TS Server").
+## ♬♬ 끝 [5] ♬♬

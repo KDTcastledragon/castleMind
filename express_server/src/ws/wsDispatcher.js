@@ -54,12 +54,12 @@ export function attachWsDispatcher(httpServer, sessionMiddleware) {
                 request = JSON.parse(data.toString());
 
                 switch (request.wsType) {
-                case 'CONNECT_USER':
-                    responseOk(ws, request, 'CONNECT_USER_OK', loginUser);
-                    break;
+                    case 'CONNECT_USER':
+                        responseOk(ws, request, 'CONNECT_USER_OK', loginUser);
+                        break;
 
-                default:
-                    responseFail(ws, request, 'UNKNOWN_TYPE', '알 수 없는 WS TYPE');
+                    default:
+                        responseFail(ws, request, 'UNKNOWN_TYPE', '알 수 없는 WS TYPE');
                 }
             } catch (e) {
                 console.error('WS 메시지 처리 실패', e);
