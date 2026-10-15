@@ -8,7 +8,12 @@ export default defineConfig({
     server: {
         port: 3000,
         proxy: {
-            '/user': 'http://localhost:4000'
+            '/user': 'http://localhost:4000',
+            // WebSocket 도 같은 주소(3000)로 열고 Express(4000)의 /ws 로 넘긴다. ws: true 가 있어야 연결 업그레이드를 넘겨준다.
+            '/ws': {
+                target: 'ws://localhost:4000',
+                ws: true
+            }
         }
     }
 });

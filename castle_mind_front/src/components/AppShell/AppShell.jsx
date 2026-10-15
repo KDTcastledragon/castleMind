@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from "../Home/Header";
 import RouteBody from "../Home/RouteBody";
 import { meApi } from "../../api/userApi";
+import { connectWs, disconnectWs } from "../../webSocket/wsClient";
 
 function AppShell() {
     const navigator = useNavigate();
@@ -28,6 +29,21 @@ function AppShell() {
             navigator('/tempLogin', { replace: true });
         }
     }, [me, isCheckingLogin, location.pathname, navigator]);
+
+    // ======== 로그인되면 WS 연결, 로그아웃(me 가 null)되면 WS 종료. 유저 1명당 WS 1개 =======
+    useEffect(() => {
+        if (!me) {
+            disconnectWs('LOGOUT');
+            return;
+        }
+
+        connectWs();
+    }, [me]);
+
+    // ======== AppShell 이 사라질 때(탭 닫기 등) WS 정리 =======
+    useEffect(() => {
+        return () => disconnectWs('APPSHELL_UNMOUNT');
+    }, []);
 
     if (isCheckingLogin) return null;
 

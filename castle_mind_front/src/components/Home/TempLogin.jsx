@@ -22,7 +22,8 @@ function TempLogin({ setMe }) {
             setMe(me);
             navigator('/');
         } catch (e) {
-            alert(e.response?.status === 400 ? e.response.data : '로그인 오류');
+            const status = e.response?.status;
+            alert(status === 400 || status === 401 ? e.response.data : '로그인 오류');
             console.error(e);
         } finally {
             setIsLoggingIn(false);
